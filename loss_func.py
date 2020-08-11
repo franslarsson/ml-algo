@@ -19,6 +19,8 @@ def binary_cross_entropy(y_true, y_pred):
     J : float
         The average binary cross-entropy loss.
     """
-    return -np.mean(y_true.T * np.log(y_pred) + (1 - y_true).T * np.log(1 - y_pred))
+    eps = 1e-12
+    return -np.mean(y_true.T * np.log(y_pred + eps) +
+                    (1 - y_true).T * np.log(1 - y_pred + eps))
 
 
