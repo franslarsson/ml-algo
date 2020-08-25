@@ -1,4 +1,4 @@
-# ml_algo
+# ml-algo
 
 ## Motivation
 The purpose with this project is to implement various machine learning algorithms for my own learning. Thus, the 
