@@ -262,7 +262,7 @@ class Leaf(object):
     Attributes
     ----------
     pred : int
-        The predicted label for observation which the leaf.
+        The predicted label for an observation which ends up in this leaf.
     """
     def __init__(self, pred):
         self.pred = int(pred)
