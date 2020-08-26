@@ -8,8 +8,8 @@ Hopefully these implementations can be of some use for others as well. I'll ther
 
 ## Project structure
 The algorithms are divided into folders, e.g. tree_models. In each of these folders there should be at least three files for each algorithm. These are:
-1. A .py file containing the main implementation of the algorithm.
+1. A .py file (algo_name.py) containing the main implementation of the algorithm.
 
-2. A .py file containing tests for the implementaiton of the algorithm.
+2. A .py file (test_algo_name.py) containing tests for the implementaiton of the algorithm.
 
-3. A .ipynb file containing some theory about the algorithm, a step by step description on how the algorithm was implemented and some examples.
+3. A .ipynb file (algo_name.ipynb) containing some theory about the algorithm, a step by step description on how the algorithm was implemented and some examples.
