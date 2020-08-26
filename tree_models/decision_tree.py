@@ -152,13 +152,14 @@ class DecisionTree(object):
         y = y[idx_sorted]
         cost_low = np.inf
         best_split = None
-        for i in range(len(feature)-1):
-            r1 = y[:i+1]
-            r2 = y[i+1:]
+        for v in np.unique(feature)[:-1]:
+            r1 = y[feature <= v]
+            r2 = y[feature > v]
             cost = self.eval_split(r1, r2)
             if cost < cost_low:
                 cost_low = cost
-                best_split = (feature[i] + feature[i+1]) / 2
+                next_val = feature[feature > v][0]
+                best_split = (v + next_val) / 2
         return cost_low, best_split
 
     def eval_split(self, r1, r2):
