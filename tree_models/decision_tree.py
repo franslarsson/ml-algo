@@ -11,9 +11,14 @@ class DecisionTree(object):
     `RegressionTree` are built upon. All the functionality is defined in the
     base class `DecisionTree` except for the cost function or impurity
     function.
+
+    Parameters
+    ----------
+    max_depth : int or None
+        The maximum depth of the tree.
     """
-    def __init__(self):
-        pass
+    def __init__(self, max_depth=None):
+        self.max_depth = max_depth
 
     def fit(self, X, y):
         """Fit a decision tree model to the data.
@@ -69,7 +74,7 @@ class DecisionTree(object):
         else:
             return self.traverse(X, node.right_child)
 
-    def partition(self, X, y):
+    def partition(self, X, y, depth=0):
         """Partition the data.
 
         Parameters
@@ -78,24 +83,27 @@ class DecisionTree(object):
             A matrix with the data.
         y : ndarray
             A column vector with the true target values.
+        depth : int
+            The maximum depth of the tree to grow.
 
         Returns
         -------
         node : TreeNode instance
             A node which represents the root of the fitted tree.
         """
-        y_unique = np.unique(y)
-        if len(y_unique) == 1:
-            return Leaf(y_unique)
-        feature, split_val = self.find_feature(X, y)
+        check = self.check_partition(y, depth)
+        if isinstance(check, Leaf):
+            print(depth)
+            return check
 
+        feature, split_val = self.find_feature(X, y)
         X_left = X[X[:, feature] <= split_val]
         X_right = X[X[:, feature] > split_val]
         y_left = y[X[:, feature] <= split_val]
         y_right = y[X[:, feature] > split_val]
 
-        node = TreeNode(feature, split_val, self.partition(X_left, y_left),
-                        self.partition(X_right, y_right))
+        node = TreeNode(feature, split_val, self.partition(X_left, y_left, depth+1),
+                        self.partition(X_right, y_right, depth+1))
         return node
 
     def find_feature(self, X, y):
@@ -163,7 +171,10 @@ class DecisionTree(object):
         return cost_low, best_split
 
     def eval_split(self, r1, r2):
-        pass
+        raise NotImplementedError
+
+    def check_partition(self, y, depth):
+        raise NotImplementedError
 
 
 class ClassificationTree(DecisionTree):
@@ -173,14 +184,49 @@ class ClassificationTree(DecisionTree):
     on the class `DecisionTree` with the only addition is to compute the cost
     function when deciding splits.
 
-    Attributes
+    Parameters
     ----------
     impurity_measure : {'gini', 'entropy'}
         Defines which impurity measure which should be used when fitting the
         tree.
+    max_depth : int or None
+        The maximum depth of the tree.
     """
-    def __init__(self, impurity_measure='gini'):
+    def __init__(self, impurity_measure='gini', max_depth=None):
         self.impurity_measure = impurity_measure
+        super().__init__(max_depth=max_depth)
+
+    def check_partition(self, y, depth):
+        """Check if `y` only contains one class or if the maximum depth is
+        reached.
+
+        Parameters
+        ----------
+        y : ndarray
+            An array with class labels.
+        depth : int
+            The maximum depth of the tree.
+
+        Returns
+        -------
+        check : Leaf instance or None
+            A Leaf instance is returned if either `y` only contains one class
+            label or if the maximum depth of the tree is reached. Otherwise,
+            None is returned.
+        """
+        (y_unique, counts) = np.unique(y, return_counts=True)
+
+        if len(y_unique) == 1:
+            return Leaf(y_unique)
+
+        if self.max_depth is None:
+            return None
+        elif depth >= self.max_depth:
+            idx = np.argmax(counts)
+            val = y_unique[idx]
+            return Leaf(val)
+        else:
+            return None
 
     def eval_split(self, y_left, y_right):
         """Evaluate a candidate split.
