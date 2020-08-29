@@ -9,8 +9,8 @@ class DecisionTree(object):
 
     Implements the base class from which `ClassificationTree` and
     `RegressionTree` are built upon. All the functionality is defined in the
-    base class `DecisionTree` except for the cost function or impurity
-    function.
+    base class `DecisionTree` except for evaluating a split and checking if a
+    Leaf has been reached.
 
     Parameters
     ----------
