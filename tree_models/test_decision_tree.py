@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from decision_tree import DecisionTree, TreeNode, ClassificationTree
+from decision_tree import DecisionTree, TreeNode, ClassificationTree, Leaf
 
 
 def test_split_one_feature():
@@ -67,3 +67,23 @@ def test_predict():
     assert tree.predict(np.array([3, 0.5])) == 1
     assert tree.predict(np.array([10, 10])) == 1
     assert tree.predict(np.array([5, 1.51])) == 0
+
+
+def test_max_depth():
+    """Test the implementation of `max_depth` and `check_partition`."""
+    tree = ClassificationTree(max_depth=1)
+
+    X = np.array([[1, 1],
+                  [2,  1],
+                  [1,  2],
+                  [2,  2],
+                  [2,  3]])
+    y = np.array([1, 1, 0, 0, 1])
+    tree.fit(X, y)
+    assert tree.root.split_val == 1.5
+    assert tree.root.feature == 1
+    assert isinstance(tree.root.left_child, Leaf)
+    assert isinstance(tree.root.right_child, Leaf)
+    assert tree.root.left_child.pred == 1
+    assert tree.root.right_child.pred == 0
+    assert tree.predict(np.array([2, 3])) == 0
