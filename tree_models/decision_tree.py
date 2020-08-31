@@ -93,7 +93,6 @@ class DecisionTree(object):
         """
         check = self.check_partition(y, depth)
         if isinstance(check, Leaf):
-            print(depth)
             return check
 
         feature, split_val = self.find_feature(X, y)
