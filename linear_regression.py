@@ -32,3 +32,25 @@ class LinearRegression(object):
             ones = np.ones(shape=(X.shape[0], 1))
             X = np.hstack([ones, X])
         return X.dot(self.beta)
+
+
+class RidgeRegression(LinearRegression):
+
+    """Ridge regression.
+
+    Parameters
+    ----------
+    alpha : float
+    intercept : bool
+
+    """
+    def __init__(self, alpha, intercept=True):
+        super().__init__(intercept=intercept)
+        self.alpha = alpha
+
+    def fit(self, X, y):
+        if self.intercept:
+            ones = np.ones(shape=(X.shape[0], 1))
+            X = np.hstack([ones, X])
+        inv = np.linalg.pinv((X.T.dot(X) + self.alpha*np.eye(X.shape[1])))
+        self.beta = inv.dot(X.T).dot(y).reshape(-1, 1)
