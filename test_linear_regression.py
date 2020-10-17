@@ -1,7 +1,7 @@
 
 import numpy as np
 
-from linear_regression import LinearRegression
+from linear_regression import LinearRegression, RidgeRegression
 
 
 def test_linear_regression():
@@ -19,3 +19,14 @@ def test_linear_regression():
     y = np.array([9, 7, 3, 1]).reshape(-1, 1)
     model.fit(X, y)
     assert np.isclose(model.beta, np.array([5, -2]).reshape(-1, 1)).all()
+
+
+def test_ridge_regresion():
+    X = np.array([1, 2, 3, 4, 5]).reshape(-1, 1)
+    y = np.array([10, 20, 30, 40, 50]).reshape(-1, 1)
+    linear = LinearRegression()
+    linear.fit(X, y)
+
+    ridge = RidgeRegression(alpha=0)
+    ridge.fit(X, y)
+    assert np.isclose(linear.beta, ridge.beta).all()
