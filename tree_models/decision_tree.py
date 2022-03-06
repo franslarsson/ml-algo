@@ -49,7 +49,9 @@ class DecisionTree(object):
         pred : float or int
             Prediction for the data row `X`.
         """
-        pred = self.traverse(X, self.root)
+        pred = np.zeros(shape=(X.shape[0], 1))
+        for i in range(X.shape[0]):
+            pred[i] = self.traverse(X[i, :], self.root)
         return pred
 
     def traverse(self, X, node):
