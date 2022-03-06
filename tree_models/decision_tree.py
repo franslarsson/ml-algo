@@ -259,7 +259,7 @@ class ClassificationTree(DecisionTree):
 
     def plot_boundaries(self, X, y):
         plt.figure()
-        sns.scatterplot(X[:, 0], X[:, 1], hue=y, style=y, legend=None)
+        sns.scatterplot(x=X[:, 0], y=X[:, 1], hue=y, style=y, legend=None)
 
         def plot_node(node):
             if isinstance(node, TreeNode):
